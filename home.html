@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Icon Wishlist</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Card style */
+        .card {
+            width: 200px;
+            height: 300px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+            background-color: #f9f9f9;
+            margin: 20px;
+            display: inline-block;
+        }
+
+        /* Heart icon style on cards */
+        .heart-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            color: black;
+            cursor: pointer;
+        }
+
+        /* Heart icon at the top */
+        #wishlist-heart {
+            font-size: 40px;
+            color: black;
+            margin-top: 20px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        /* Modal for displaying wishlist items */
+        #wishlist-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            width: 300px;
+            z-index: 1000;
+        }
+
+        #wishlist-modal h3 {
+            margin-top: 0;
+        }
+
+        #close-modal {
+            cursor: pointer;
+            color: red;
+            text-align: right;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Heart Icon -->
+    <div id="wishlist-heart">
+        <i class="fas fa-heart"></i>
+    </div>
+
+    <!-- Modal to show wishlist items -->
+    <div id="wishlist-modal">
+        <span id="close-modal">X</span>
+        <h3>Wishlist Items</h3>
+        <ul id="wishlist-items-list"></ul>
+    </div>
+
+    <!-- Cards -->
+    <div class="card">
+        <i class="fas fa-heart heart-icon" data-card="Card 1"></i>
+        <h3>Card 1</h3>
+        <p>Description of card 1.</p>
+    </div>
+
+    <div class="card">
+        <i class="fas fa-heart heart-icon" data-card="Card 2"></i>
+        <h3>Card 2</h3>
+        <p>Description of card 2.</p>
+    </div>
+
+    <div class="card">
+        <i class="fas fa-heart heart-icon" data-card="Card 3"></i>
+        <h3>Card 3</h3>
+        <p>Description of card 3.</p>
+    </div>
+
+    <script>
+        // Array to store wishlist items
+        let wishlistItems = [];
+
+        // Function to toggle the heart color on individual cards
+        function toggleHeartColor(heartIcon) {
+            const cardTitle = heartIcon.getAttribute('data-card');
+
+            if (heartIcon.style.color === "red") {
+                heartIcon.style.color = "black"; // Remove item from wishlist
+                wishlistItems = wishlistItems.filter(item => item !== cardTitle);
+                alert(`${cardTitle} has been removed from your wishlist.`);
+            } else {
+                heartIcon.style.color = "red"; // Add item to wishlist
+                wishlistItems.push(cardTitle);
+                alert(`${cardTitle} has been added to your wishlist!`);
+            }
+        }
+
+        // Event listener for each heart icon on cards
+        document.querySelectorAll('.heart-icon').forEach(heartIcon => {
+            heartIcon.addEventListener('click', () => {
+                toggleHeartColor(heartIcon);
+                updateWishlistHeart(); // Update the wishlist heart icon at the top
+            });
+        });
+
+        // Function to update the main heart icon color based on wishlist
+        function updateWishlistHeart() {
+            const wishlistHeart = document.getElementById('wishlist-heart').querySelector('i');
+            if (wishlistItems.length > 0) {
+                wishlistHeart.classList.remove('far');
+                wishlistHeart.classList.add('fas');
+                wishlistHeart.style.color = 'red'; // Fill heart if there are items in the wishlist
+            } else {
+                wishlistHeart.classList.remove('fas');
+                wishlistHeart.classList.add('far');
+                wishlistHeart.style.color = ''; // Empty heart if no items in wishlist
+            }
+        }
+
+        // Function to show the wishlist items when clicking the main heart
+        function showWishlistItems() {
+            const wishlistModal = document.getElementById('wishlist-modal');
+            const wishlistItemsList = document.getElementById('wishlist-items-list');
+            wishlistItemsList.innerHTML = ''; // Clear previous items
+
+            if (wishlistItems.length > 0) {
+                wishlistItems.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    wishlistItemsList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = 'Your wishlist is empty.';
+                wishlistItemsList.appendChild(li);
+            }
+
+            wishlistModal.style.display = 'block';
+        }
+
+        // Event listener to show the wishlist modal when clicking the main heart icon
+        document.getElementById('wishlist-heart').addEventListener('click', showWishlistItems);
+
+        // Close the wishlist modal
+        document.getElementById('close-modal').addEventListener('click', function() {
+            document.getElementById('wishlist-modal').style.display = 'none';
+        });
+
+    </script>
+
+</body>
+</html>
